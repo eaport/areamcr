@@ -30,6 +30,37 @@
     <section id="noticias" class="p-10 bg-white">
       <h2 class="text-2xl font-bold mb-4">Notícias</h2>
       <p>Em breve, as últimas notícias do CREA-PR e CAU-PR serão exibidas aqui automaticamente.</p>
+      <section id="noticias" class="p-10 bg-white">
+  <h2 class="text-2xl font-bold mb-4">Notícias CAU/BR</h2>
+  <ul id="feed-cau" class="space-y-4">
+    <li>Carregando notícias...</li>
+  </ul>
+</section>
+
+<script>
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://caubr.gov.br/feed/')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('feed-cau');
+      container.innerHTML = ''; // limpa "Carregando..."
+      data.items.slice(0, 5).forEach(item => {
+        const li = document.createElement('li');
+        li.className = "mb-4";
+        li.innerHTML = `
+          <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            ${item.title}
+          </a>
+          <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString()}</p>
+        `;
+        container.appendChild(li);
+      });
+    })
+    .catch(error => {
+      document.getElementById('feed-cau').innerHTML = '<li>Não foi possível carregar as notícias.</li>';
+      console.error('Erro ao carregar feed:', error);
+    });
+</script>
+
     </section>
 
     <section id="revista" class="p-10 bg-gray-100">
