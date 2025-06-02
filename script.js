@@ -1,0 +1,1 @@
+// Script futuro para interatividade
