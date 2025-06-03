@@ -30,36 +30,41 @@
     <section id="noticias" class="p-10 bg-white">
       <h2 class="text-2xl font-bold mb-4">Notícias</h2>
       <p>Em breve, as últimas notícias do CREA-PR e CAU-PR serão exibidas aqui automaticamente.</p>
-      <section id="noticias-caupr" class="p-10 bg-white">
-  <h2 class="text-2xl font-bold mb-4">Notícias CAU/PR</h2>
-  <ul id="feed-caupr" class="space-y-4">
+      <section id="noticias-caubr" class="p-10 bg-white">
+  <h2 class="text-2xl font-bold mb-4">Notícias CAU/BR</h2>
+  <ul id="feed-caubr" class="space-y-4">
     <li>Carregando notícias...</li>
   </ul>
 </section>
 
 <script>
-  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.caupr.gov.br/feed/')
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://caubr.gov.br/feed/')
     .then(response => response.json())
     .then(data => {
-      const container = document.getElementById('feed-caupr');
+      const container = document.getElementById('feed-caubr');
       container.innerHTML = '';
-      data.items.slice(0, 5).forEach(item => {
-        const li = document.createElement('li');
-        li.className = "mb-4";
-        li.innerHTML = `
-          <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
-            ${item.title}
-          </a>
-          <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString()}</p>
-        `;
-        container.appendChild(li);
-      });
+      if (data.items && data.items.length > 0) {
+        data.items.slice(0, 5).forEach(item => {
+          const li = document.createElement('li');
+          li.className = "mb-4";
+          li.innerHTML = `
+            <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
+              ${item.title}
+            </a>
+            <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString()}</p>
+          `;
+          container.appendChild(li);
+        });
+      } else {
+        container.innerHTML = '<li>Sem notícias disponíveis no momento.</li>';
+      }
     })
     .catch(error => {
-      document.getElementById('feed-caupr').innerHTML = '<li>Não foi possível carregar as notícias.</li>';
-      console.error('Erro ao carregar feed CAU/PR:', error);
+      console.error('Erro ao carregar feed CAU/BR:', error);
+      document.getElementById('feed-caubr').innerHTML = '<li>Erro ao carregar as notícias.</li>';
     });
 </script>
+
 <rssapp-carousel id="xKJxMtyQqFLgTtuf"></rssapp-carousel><script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
     </section>
 
