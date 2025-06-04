@@ -2,29 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Painel Administrativo</title>
+  <title>Área Administrativa com Upload</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 2rem;
-    }
-    input {
-      margin: 0.5rem;
-      padding: 0.5rem;
-      width: 220px;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      margin-top: 1rem;
-    }
-    #adminArea {
-      display: none;
-      margin-top: 2rem;
-      border-top: 1px solid #ccc;
-      padding-top: 1rem;
-    }
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    input, button { margin: 0.5rem; padding: 0.5rem; width: 220px; }
+    #adminArea { display: none; margin-top: 2rem; border-top: 1px solid #ccc; padding-top: 1rem; }
+    #fileList { margin-top: 1rem; text-align: left; display: inline-block; }
+    a { display: block; margin: 0.2rem 0; }
   </style>
 </head>
 <body>
@@ -38,30 +23,34 @@
 
   <div id="adminArea">
     <h2>Bem-vindo à área administrativa!</h2>
-    <p>Você está autenticado com sucesso.</p>
+    <input type="file" id="fileInput" accept="application/pdf" />
+    <button onclick="uploadFile()">Enviar PDF</button>
+    <div id="fileList">
+      <h3>Arquivos Enviados:</h3>
+      <ul id="files"></ul>
+    </div>
     <button onclick="logout()">Sair</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, listAll, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA36MsCp_D09jCjwKZjiJpYXl6508j4tEo",
       authDomain: "area-administrativa-d41b7.firebaseapp.com",
       projectId: "area-administrativa-d41b7",
-      storageBucket: "area-administrativa-d41b7.firebasestorage.app",
+      storageBucket: "area-administrativa-d41b7.appspot.com",
       messagingSenderId: "584017459553",
       appId: "1:584017459553:web:836a2468ee4e8d6810ad20",
       measurementId: "G-PWBPESPSMZ"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
+    const storage = getStorage(app);
 
-    // Função de login
     window.login = () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -69,30 +58,70 @@
         .then(() => {
           document.getElementById("loginForm").style.display = "none";
           document.getElementById("adminArea").style.display = "block";
+          listFiles();
         })
         .catch((error) => {
           alert("Erro: " + error.message);
         });
     };
 
-    // Função de logout
     window.logout = () => {
       signOut(auth).then(() => {
         document.getElementById("loginForm").style.display = "block";
         document.getElementById("adminArea").style.display = "none";
+        document.getElementById("files").innerHTML = "";
       });
     };
 
-    // Estado de autenticação
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("loginForm").style.display = "none";
         document.getElementById("adminArea").style.display = "block";
+        listFiles();
       } else {
         document.getElementById("loginForm").style.display = "block";
         document.getElementById("adminArea").style.display = "none";
+        document.getElementById("files").innerHTML = "";
       }
     });
+
+    window.uploadFile = () => {
+      const file = document.getElementById("fileInput").files[0];
+      if (!file) {
+        alert("Selecione um arquivo PDF para enviar.");
+        return;
+      }
+      const storageRef = ref(storage, 'pdfs/' + file.name);
+      uploadBytes(storageRef, file).then(() => {
+        alert("Arquivo enviado com sucesso!");
+        listFiles();
+      }).catch((error) => {
+        alert("Erro ao enviar o arquivo: " + error.message);
+      });
+    };
+
+    function listFiles() {
+      const listRef = ref(storage, 'pdfs/');
+      listAll(listRef)
+        .then((res) => {
+          const filesList = document.getElementById("files");
+          filesList.innerHTML = "";
+          res.items.forEach((itemRef) => {
+            getDownloadURL(itemRef).then((url) => {
+              const li = document.createElement("li");
+              const link = document.createElement("a");
+              link.href = url;
+              link.textContent = itemRef.name;
+              link.target = "_blank";
+              li.appendChild(link);
+              filesList.appendChild(li);
+            });
+          });
+        })
+        .catch((error) => {
+          alert("Erro ao listar arquivos: " + error.message);
+        });
+    }
   </script>
 </body>
 </html>
