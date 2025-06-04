@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AREA - Notícias Unificadas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+  <header class="bg-white shadow p-4 mb-8">
+    <h1 class="text-3xl font-bold text-center">AREA - Notícias CREA-PR e CAU-PR</h1>
+  </header>
+
+  <main class="max-w-3xl mx-auto p-6 bg-white rounded shadow">
+
+    <section id="noticias" class="">
+      <h2 class="text-2xl font-bold mb-8">Notícias</h2>
+
+      <h3 class="text-xl font-semibold mb-4">CREA-PR</h3>
+      <ul id="feed-crea" class="space-y-4 mb-10">
+        <li>Carregando notícias do CREA-PR...</li>
+      </ul>
+
+      <h3 class="text-xl font-semibold mb-4">CAU/PR</h3>
+      <ul class="space-y-4" id="feed-cau">
+        <li>
+          <a href="https://www.caupr.gov.br/noticias/caupr-recebe-evento-sobre-as-agendas-do-clima/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            CAU/PR recebe evento sobre as Agendas do Clima
+          </a>
+          <p class="text-sm text-gray-600">03/06/2024</p>
+        </li>
+        <li>
+          <a href="https://www.caupr.gov.br/noticias/caupr-promove-palestra-sobre-arquitetura-negra/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            CAU/PR promove palestra sobre Arquitetura Negra
+          </a>
+          <p class="text-sm text-gray-600">30/05/2024</p>
+        </li>
+        <li>
+          <a href="https://www.caupr.gov.br/noticias/caupr-apresenta-oportunidades-do-programa-maos-a-obra/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            CAU/PR apresenta oportunidades do programa Mãos à Obra
+          </a>
+          <p class="text-sm text-gray-600">28/05/2024</p>
+        </li>
+        <li>
+          <a href="https://www.caupr.gov.br/noticias/arquitetos-e-urbanistas-discutem-habitacao-de-interesse-social/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            Arquitetos e urbanistas discutem habitação de interesse social
+          </a>
+          <p class="text-sm text-gray-600">27/05/2024</p>
+        </li>
+        <li>
+          <a href="https://www.caupr.gov.br/noticias/eleicoes-do-cau-2024-fique-por-dentro/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+            Eleições do CAU 2024: fique por dentro!
+          </a>
+          <p class="text-sm text-gray-600">24/05/2024</p>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>
+    // Função para carregar notícias do CREA-PR via rss2json
+    async function loadCreaNoticias() {
+      const feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https://www.crea-pr.org.br/noticias/feed";
+      try {
+        const response = await fetch(feedUrl);
+        const data = await response.json();
+        const ul = document.getElementById("feed-crea");
+        ul.innerHTML = "";
+
+        if (data.status === "ok" && data.items.length > 0) {
+          data.items.slice(0,5).forEach(item => {
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">${item.title}</a>
+              <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString('pt-BR')}</p>
+            `;
+            ul.appendChild(li);
+          });
+        } else {
+          ul.innerHTML = "<li>Sem notícias disponíveis no momento.</li>";
+        }
+      } catch (err) {
+        document.getElementById("feed-crea").innerHTML = "<li>Erro ao carregar notícias do CREA-PR.</li>";
+        console.error(err);
+      }
+    }
+
+    loadCreaNoticias();
+  </script>
+
+</body>
+</html>
