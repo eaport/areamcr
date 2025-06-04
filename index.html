@@ -30,7 +30,36 @@
     <section id="noticias" class="p-10 bg-white">
       <h2 class="text-2xl font-bold mb-4">Notícias</h2>
       <p>Em breve, as últimas notícias do CREA-PR e CAU-PR serão exibidas aqui automaticamente.</p>
-fetch('https://api.rss2json.com/v1/api.json?rss_url=SEU_FEED_RSS_DO_RSS_APP')
+
+<script>
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=site:caupr.gov.br')
+    .then(response => response.json())
+    .then(data => {
+      const container = document.getElementById('feed-caupr');
+      container.innerHTML = '';
+      if (data.items && data.items.length > 0) {
+        data.items.slice(0, 5).forEach(item => {
+          const li = document.createElement('li');
+          li.className = "mb-4";
+          li.innerHTML = `
+            <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
+              ${item.title}
+            </a>
+            <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString()}</p>
+          `;
+          container.appendChild(li);
+        });
+      } else {
+        container.innerHTML = '<li>Sem notícias disponíveis no momento.</li>';
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao carregar feed CAU/PR:', error);
+      document.getElementById('feed-caupr').innerHTML = '<li>Erro ao carregar as notícias.</li>';
+    });
+</script>
+
+      
 <rssapp-carousel id="xKJxMtyQqFLgTtuf"></rssapp-carousel><script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
     </section>
 
