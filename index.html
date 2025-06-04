@@ -31,33 +31,63 @@
       <h2 class="text-2xl font-bold mb-4">Notícias</h2>
       <p>Em breve, as últimas notícias do CREA-PR e CAU-PR serão exibidas aqui automaticamente.</p>
 
-<script>
-  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://news.google.com/rss/search?q=site:caupr.gov.br')
-    .then(response => response.json())
-    .then(data => {
-      const container = document.getElementById('feed-caupr');
-      container.innerHTML = '';
-      if (data.items && data.items.length > 0) {
-        data.items.slice(0, 5).forEach(item => {
-          const li = document.createElement('li');
-          li.className = "mb-4";
-          li.innerHTML = `
-            <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
-              ${item.title}
-            </a>
-            <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString()}</p>
-          `;
-          container.appendChild(li);
-        });
-      } else {
-        container.innerHTML = '<li>Sem notícias disponíveis no momento.</li>';
-      }
-    })
-    .catch(error => {
-      console.error('Erro ao carregar feed CAU/PR:', error);
-      document.getElementById('feed-caupr').innerHTML = '<li>Erro ao carregar as notícias.</li>';
-    });
-</script>
+<section id="noticias-caupr" class="p-10 bg-white">
+  <h2 class="text-2xl font-bold mb-6">Notícias CAU/PR</h2>
+  <ul class="space-y-6">
+
+    <li class="flex gap-4 border-b pb-4">
+      <img src="https://www.caupr.gov.br/wp-content/uploads/2024/05/050624-capa.png" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">
+      <div>
+        <a href="https://www.caupr.gov.br/noticias/caupr-recebe-evento-sobre-as-agendas-do-clima/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+          CAU/PR recebe evento sobre as Agendas do Clima
+        </a>
+        <p class="text-sm text-gray-600 mt-1">03/06/2024</p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 border-b pb-4">
+      <img src="https://www.caupr.gov.br/wp-content/uploads/2024/05/300524-capa.png" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">
+      <div>
+        <a href="https://www.caupr.gov.br/noticias/caupr-promove-palestra-sobre-arquitetura-negra/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+          CAU/PR promove palestra sobre Arquitetura Negra
+        </a>
+        <p class="text-sm text-gray-600 mt-1">30/05/2024</p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 border-b pb-4">
+      <img src="https://www.caupr.gov.br/wp-content/uploads/2024/05/280524-capa.png" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">
+      <div>
+        <a href="https://www.caupr.gov.br/noticias/caupr-apresenta-oportunidades-do-programa-maos-a-obra/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+          CAU/PR apresenta oportunidades do programa Mãos à Obra
+        </a>
+        <p class="text-sm text-gray-600 mt-1">28/05/2024</p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 border-b pb-4">
+      <img src="https://www.caupr.gov.br/wp-content/uploads/2024/05/270524-capa.png" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">
+      <div>
+        <a href="https://www.caupr.gov.br/noticias/arquitetos-e-urbanistas-discutem-habitacao-de-interesse-social/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+          Arquitetos e urbanistas discutem habitação de interesse social
+        </a>
+        <p class="text-sm text-gray-600 mt-1">27/05/2024</p>
+      </div>
+    </li>
+
+    <li class="flex gap-4 border-b pb-4">
+      <img src="https://www.caupr.gov.br/wp-content/uploads/2024/05/240524-capa.png" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">
+      <div>
+        <a href="https://www.caupr.gov.br/noticias/eleicoes-do-cau-2024-fique-por-dentro/" target="_blank" class="text-blue-600 font-semibold hover:underline">
+          Eleições do CAU 2024: fique por dentro!
+        </a>
+        <p class="text-sm text-gray-600 mt-1">24/05/2024</p>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
 
       
 <rssapp-carousel id="xKJxMtyQqFLgTtuf"></rssapp-carousel><script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
