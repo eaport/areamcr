@@ -30,49 +30,7 @@
     <section id="noticias" class="p-10 bg-white">
       <h2 class="text-2xl font-bold mb-4">Notícias</h2>
       <p>Em breve, as últimas notícias do CREA-PR e CAU-PR serão exibidas aqui automaticamente.</p>
-      <section id="noticias-caupr" class="p-10 bg-white">
-  <h2 class="text-2xl font-bold mb-4">Notícias CAU/PR</h2>
-  <ul id="feed-caupr" class="space-y-6">
-    <li>Carregando notícias...</li>
-  </ul>
-</section>
-
-<script>
-  fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.caupr.gov.br/feed/')
-    .then(response => response.json())
-    .then(data => {
-      const container = document.getElementById('feed-caupr');
-      container.innerHTML = '';
-      if (data.items && data.items.length > 0) {
-        data.items.slice(0, 5).forEach(item => {
-          const li = document.createElement('li');
-          li.className = "flex gap-4 border-b pb-4";
-
-          const imageHTML = item.thumbnail
-            ? `<img src="${item.thumbnail}" alt="Imagem da notícia" class="w-28 h-20 object-cover rounded">`
-            : '';
-
-          li.innerHTML = `
-            ${imageHTML}
-            <div>
-              <a href="${item.link}" target="_blank" class="text-blue-600 font-semibold hover:underline">
-                ${item.title}
-              </a>
-              <p class="text-sm text-gray-600 mt-1">${new Date(item.pubDate).toLocaleDateString()}</p>
-            </div>
-          `;
-          container.appendChild(li);
-        });
-      } else {
-        container.innerHTML = '<li>Sem notícias disponíveis no momento.</li>';
-      }
-    })
-    .catch(error => {
-      console.error('Erro ao carregar feed CAU/PR:', error);
-      document.getElementById('feed-caupr').innerHTML = '<li>Erro ao carregar as notícias.</li>';
-    });
-</script>
-
+fetch('https://api.rss2json.com/v1/api.json?rss_url=SEU_FEED_RSS_DO_RSS_APP')
 <rssapp-carousel id="xKJxMtyQqFLgTtuf"></rssapp-carousel><script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
     </section>
 
