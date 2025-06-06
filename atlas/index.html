@@ -150,7 +150,34 @@ loadCreaNoticias();
             </div>
 		-->
 		<!-- <iframe src="revistas/concreta2024.pdf" style="width: 100%; height: 100vh; border: none;"></iframe> -->
-		<iframe src="visualizar.html" style="width: 100%; height: 100vh; border: none;"></iframe>
+
+<div id="revistas" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+  <!-- Revista 1 -->
+  <div class="revista" style="max-width: 250px; width: 100%;">
+    <img src="revistas/capa-revista-2024.jpg" alt="Revista 2024" style="width: 100%; cursor: pointer;" onclick="abrirPDF(this, 'revistas/revista2024.pdf')">
+    <iframe src="" style="width: 100%; height: 80vh; border: none; display: none;"></iframe>
+  </div>
+
+  <!-- Revista 2 -->
+  <div class="revista" style="max-width: 250px; width: 100%;">
+    <img src="revistas/capa-revista-2023.jpg" alt="Revista 2023" style="width: 100%; cursor: pointer;" onclick="abrirPDF(this, 'revistas/revista2023.pdf')">
+    <iframe src="" style="width: 100%; height: 80vh; border: none; display: none;"></iframe>
+  </div>
+
+  <!-- Adicione mais blocos assim para novas edições -->
+</div>
+
+<script>
+  function abrirPDF(imagem, pdfUrl) {
+    const container = imagem.parentElement;
+    const iframe = container.querySelector('iframe');
+
+    imagem.style.display = 'none';
+    iframe.src = pdfUrl;
+    iframe.style.display = 'block';
+  }
+</script>
+		
             <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true" class="col-md-4 text-center py-4 mt-5 rounded" id="price-table__premium">
                 <h4 class="my-4">PREMIUM</h4>
                 <p class="font-weight-bold">$ <span class="display-2 font-weight-bold">10</span> / MO.</p>
