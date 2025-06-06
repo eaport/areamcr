@@ -44,7 +44,42 @@
     <!-- three-blcok -->
     <div class="container my-5 py-2">
         <h2 class="text-center font-weight-bold my-5">Smartest protection for your site</h2>
-	    <script src="noticias-crea.js"></script>
+	    <!-- NOTICIAS AUTO CREAPR -->
+	    <script>
+// Função para carregar notícias do CREA-PR via rss2json
+async function loadCreaNoticias() {
+  const feedUrl = "https://api.rss2json.com/v1/api.json?rss_url=https://www.crea-pr.org.br/noticias/feed";
+  try {
+    const response = await fetch(feedUrl);
+    const data = await response.json();
+    const ul = document.getElementById("feed-crea");
+    ul.innerHTML = "";
+
+    if (data.status === "ok" && data.items.length > 0) {
+      data.items.slice(0,5).forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <a href="${item.link}" target="_blank" class="hover:underline">${item.title}</a>
+          <p class="text-sm text-gray-600">${new Date(item.pubDate).toLocaleDateString('pt-BR')}</p>
+        `;
+        ul.appendChild(li);
+      });
+    } else {
+      ul.innerHTML = "<li>Sem notícias disponíveis no momento.</li>";
+    }
+  } catch (err) {
+    document.getElementById("feed-crea").innerHTML = "<li>Erro ao carregar notícias do CREA-PR.</li>";
+    console.error(err);
+  }
+}
+
+loadCreaNoticias();
+</script>
+	<div class="container my-5 py-2" id="noticias-crea">
+  <h2 class="text-center font-weight-bold my-5">Notícias do CREA-PR</h2>
+  <ul id="feed-crea" class="list-unstyled"></ul>
+</div>
+	    <!-- FIM NOTICIAS AUTO CREAPR -->
         <div class="row">
             <div data-aos="fade-up" data-aos-delay="0" data-aos-duration="1000" data-aos-once="true" class="col-md-4 text-center">
                 <img src="img/smart-protect-1.jpg" alt="Anti-spam" class="mx-auto">
