@@ -45,7 +45,26 @@
     <div class="container my-5 py-2">
       <!--  <h2 class="text-center font-weight-bold my-5">Smartest protection for your site</h2> -->
 	    <!-- NOTICIAS AUTO CREAPR -->
-	  <rssapp-carousel id="xKJxMtyQqFLgTtuf"></rssapp-carousel><script src="https://widget.rss.app/v1/carousel.js" type="text/javascript" async></script>
+	<script>
+    const FEED_URL = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
+
+    $.ajax({
+      url: FEED_URL,
+      dataType: 'xml',
+      success: function(xml) {
+        $(xml).find('item').each(function() {
+          const title = $(this).find('title').text();
+          const link = $(this).find('link').text();
+          $('#feed-list').append(
+            `<li><a href="${link}" target="_blank" rel="noopener">${title}</a></li>`
+          );
+        });
+      },
+      error: function() {
+        $('#feed-list').append('<li>Não foi possível carregar as notícias.</li>');
+      }
+    });
+  </script>
 	    <!-- FIM NOTICIAS AUTO CREAPR -->
         <div class="row">
             <div data-aos="fade-up" data-aos-delay="0" data-aos-duration="1000" data-aos-once="true" class="col-md-4 text-center">
