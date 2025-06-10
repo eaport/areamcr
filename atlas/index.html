@@ -46,37 +46,26 @@
       <!--  <h2 class="text-center font-weight-bold my-5">Smartest protection for your site</h2> -->
 	    <!-- NOTICIAS AUTO CREAPR -->
 <script>
-    const originalFeed = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
-    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(originalFeed);
+    const rssUrl = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
+    const apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl);
 
-    fetch(proxyUrl)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Erro ao acessar o proxy");
-        }
-        return response.json();
-      })
+    fetch(apiUrl)
+      .then(response => response.json())
       .then(data => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, "text/xml");
-        const items = xml.querySelectorAll("item");
         const list = document.getElementById("feed-list");
 
-        if (items.length === 0) {
+        if (!data.items || data.items.length === 0) {
           list.innerHTML = "<li>Nenhuma notícia encontrada.</li>";
           return;
         }
 
-        items.forEach(item => {
-          const title = item.querySelector("title")?.textContent ?? "Sem título";
-          const link = item.querySelector("link")?.textContent ?? "#";
-
+        data.items.forEach(item => {
           const li = document.createElement("li");
           const a = document.createElement("a");
-          a.href = link;
+          a.href = item.link;
           a.target = "_blank";
           a.rel = "noopener";
-          a.textContent = title;
+          a.textContent = item.title;
 
           li.appendChild(a);
           list.appendChild(li);
