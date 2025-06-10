@@ -45,14 +45,21 @@
     <div class="container my-5 py-2">
       <!--  <h2 class="text-center font-weight-bold my-5">Smartest protection for your site</h2> -->
 	    <!-- NOTICIAS AUTO CREAPR -->
-	<script>
-    const FEED_URL = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
+<script>
+    const originalFeed = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(originalFeed);
 
-    fetch(FEED_URL)
-      .then(response => response.text())
-      .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+    fetch(proxyUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erro ao acessar o proxy");
+        }
+        return response.json();
+      })
       .then(data => {
-        const items = data.querySelectorAll("item");
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "text/xml");
+        const items = xml.querySelectorAll("item");
         const list = document.getElementById("feed-list");
 
         if (items.length === 0) {
@@ -61,8 +68,8 @@
         }
 
         items.forEach(item => {
-          const title = item.querySelector("title").textContent;
-          const link = item.querySelector("link").textContent;
+          const title = item.querySelector("title")?.textContent ?? "Sem título";
+          const link = item.querySelector("link")?.textContent ?? "#";
 
           const li = document.createElement("li");
           const a = document.createElement("a");
