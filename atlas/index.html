@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>AREA - MCR</title>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="description" content="Free bootstrap template Atlas">
     <link rel="icon" href="img/favicon.png" sizes="32x32" type="image/png">
     <!-- custom.css -->
@@ -49,22 +48,37 @@
 	<script>
     const FEED_URL = 'https://createfeed.fivefilters.org/extract.php?url=https://www.crea-pr.org.br/ws/noticias/&format=rss';
 
-    $.ajax({
-      url: FEED_URL,
-      dataType: 'xml',
-      success: function(xml) {
-        $(xml).find('item').each(function() {
-          const title = $(this).find('title').text();
-          const link = $(this).find('link').text();
-          $('#feed-list').append(
-            `<li><a href="${link}" target="_blank" rel="noopener">${title}</a></li>`
-          );
+    fetch(FEED_URL)
+      .then(response => response.text())
+      .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+      .then(data => {
+        const items = data.querySelectorAll("item");
+        const list = document.getElementById("feed-list");
+
+        if (items.length === 0) {
+          list.innerHTML = "<li>Nenhuma notícia encontrada.</li>";
+          return;
+        }
+
+        items.forEach(item => {
+          const title = item.querySelector("title").textContent;
+          const link = item.querySelector("link").textContent;
+
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = link;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.textContent = title;
+
+          li.appendChild(a);
+          list.appendChild(li);
         });
-      },
-      error: function() {
-        $('#feed-list').append('<li>Não foi possível carregar as notícias.</li>');
-      }
-    });
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o feed:", error);
+        document.getElementById("feed-list").innerHTML = "<li>Erro ao carregar as notícias.</li>";
+      });
   </script>
 	    <!-- FIM NOTICIAS AUTO CREAPR -->
         <div class="row">
